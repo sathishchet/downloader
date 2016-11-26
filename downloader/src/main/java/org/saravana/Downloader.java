@@ -32,7 +32,7 @@ public class Downloader implements CommandLineRunner {
 		SpringApplication.run(Downloader.class, args);
 	}
 
-	int total;
+	private int total;
 
 	@Override
 	public void run(String... args) throws Exception {

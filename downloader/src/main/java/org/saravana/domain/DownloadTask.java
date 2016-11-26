@@ -21,7 +21,6 @@ public class DownloadTask implements Runnable {
 		Runnable task = () -> {
 			String fullPath = download.getUrl().getFile();
 			File file = new File(download.getPath(), fullPath.substring(fullPath.lastIndexOf('/')));
-			download.setLocation(file.getAbsolutePath());
 			OutputStream os = null;
 			try {
 				if (file.exists())
@@ -30,6 +29,7 @@ public class DownloadTask implements Runnable {
 				os = new FileOutputStream(file);
 				IOUtils.copyLarge(download.getUrl().openStream(), os);
 				IOUtils.closeQuietly(os);
+				download.setLocation(file.getAbsolutePath());
 				download.setStatus(Status.COMPLETED);
 				download.setMessage("Done");
 			} catch (IOException e) {
