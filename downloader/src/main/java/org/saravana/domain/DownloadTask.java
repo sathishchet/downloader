@@ -7,8 +7,12 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.saravana.domain.Download.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DownloadTask implements Runnable {
+
+	private static final Logger LOG = LoggerFactory.getLogger(DownloadTask.class);
 
 	private Download download;
 
@@ -37,6 +41,7 @@ public class DownloadTask implements Runnable {
 					file.delete();
 				download.setStatus(Status.FAILED);
 				download.setMessage(e.getMessage());
+				LOG.error("Exception while copying " + e);
 			}
 		};
 
@@ -45,6 +50,7 @@ public class DownloadTask implements Runnable {
 		} catch (Exception e) {
 			download.setStatus(Status.FAILED);
 			download.setMessage(e.getMessage());
+			LOG.error("Exception while copying " + e);
 		}
 
 	}

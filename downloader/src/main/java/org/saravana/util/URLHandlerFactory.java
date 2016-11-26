@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class URLHandlerFactory {
 
-	@Value("${url.stream.handlers}")
+	@Value("#{'${url.stream.handlers}'.split(',')}")
 	private Set<String> urlHandlers;
 
 	private Map<String, String> handlerMap;

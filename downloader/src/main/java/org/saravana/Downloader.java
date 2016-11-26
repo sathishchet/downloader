@@ -7,6 +7,8 @@ import org.saravana.domain.Download;
 import org.saravana.domain.Download.Status;
 import org.saravana.monitor.DownloadMonitor;
 import org.saravana.service.DownloadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class Downloader implements CommandLineRunner {
 
+	private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
 	@Autowired
 	private DownloadService downloadService;
 
@@ -46,15 +49,15 @@ public class Downloader implements CommandLineRunner {
 	@Scheduled(fixedDelay = 10000)
 	public void monitor() {
 		Integer in = 0;
-		final String format = "%-3s %-25s %-10s %-55s %-100s\n";
-		System.out.printf(format, "NO", "LOCATION", "STATUS", "URL", "MESSAGE");
-		System.out.println(
-				"------------------------------------------------------------------------------------------------------------------------------------------------------");
+		final String format = "%-3s %-25s %-10s %-55s %-100s";
+		LOG.info(String.format(format, "NO", "LOCATION", "STATUS", "URL", "MESSAGE"));
+		LOG.info(String.format(
+				"------------------------------------------------------------------------------------------------------------------------------------------------------"));
 		for (Download ds : monitor.getAll()) {
-			System.out.printf(format, ++in + "", ds.getLocation(), ds.getStatus(), ds.getSpec(), ds.getMessage());
+			LOG.info(String.format(format, ++in + "", ds.getLocation(), ds.getStatus(), ds.getSpec(), ds.getMessage()));
 		}
-		System.out.println(
-				"------------------------------------------------------------------------------------------------------------------------------------------------------");
+		LOG.info(String.format(
+				"------------------------------------------------------------------------------------------------------------------------------------------------------"));
 	}
 
 	@Scheduled(initialDelay = 15000, fixedDelay = 10000)

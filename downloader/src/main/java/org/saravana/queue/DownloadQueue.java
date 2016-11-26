@@ -6,10 +6,14 @@ import java.util.concurrent.SynchronousQueue;
 import javax.annotation.PreDestroy;
 
 import org.saravana.domain.Download;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DownloadQueue {
+
+	private static final Logger LOG = LoggerFactory.getLogger(DownloadQueue.class);
 
 	private BlockingQueue<Download> queue = new SynchronousQueue<Download>(true);
 
@@ -27,7 +31,7 @@ public class DownloadQueue {
 			queue.put(download);
 			status = true;
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOG.error("Exception while put in queue " + e);
 		}
 		return status;
 	}
@@ -36,7 +40,7 @@ public class DownloadQueue {
 		try {
 			return queue.take();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOG.error("Exception while take from queue " + e);
 		}
 		return null;
 	}
