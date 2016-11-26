@@ -5,10 +5,9 @@
 
 	<artifactId>downloader</artifactId>
 	<groupId>spring-boot</groupId>
-	<name>Spring Boot Data JPA Sample</name>
-	<description>Spring Boot Data JPA Sample</description>
+	<name>Spring Boot Downloader</name>
+	<description>Spring Boot Downloader</description>
 	<version>0.0.1-SNAPSHOT</version>
-	<url>http://projects.spring.io/spring-boot/</url>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -27,11 +26,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
