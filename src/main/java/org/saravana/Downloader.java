@@ -1,8 +1,5 @@
 package org.saravana;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.saravana.domain.Download;
 import org.saravana.domain.Download.Status;
 import org.saravana.monitor.DownloadMonitor;
@@ -62,8 +59,12 @@ public class Downloader implements CommandLineRunner {
 
 	@Scheduled(initialDelay = 15000, fixedDelay = 10000)
 	public void stop() {
-		List<Status> notDone = Arrays.asList(Status.DOWNLOADING, Status.UNKNOWN);
-		long unProc = monitor.getAll().stream().map(Download::getStatus).filter(notDone::contains).count();
+		long unProc = 0l;
+		for (Download dwl : monitor.getAll()) {
+			if(dwl.getStatus() == Status.DOWNLOADING || dwl.getStatus() == Status.UNKNOWN){
+				unProc++;
+			}
+		}
 		if (monitor.getAll().size() == total && unProc == 0) {
 			SpringApplication.exit(context);
 		}

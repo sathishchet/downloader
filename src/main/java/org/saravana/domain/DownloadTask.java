@@ -22,8 +22,11 @@ public class DownloadTask implements Runnable {
 
 	@Override
 	public void run() {
-		Runnable task = () -> {
-			getTask();
+		Runnable task = new Runnable() {
+			@Override
+			public void run() {
+				getTask();
+			}
 		};
 
 		try {

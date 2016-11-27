@@ -44,7 +44,12 @@ public class DownloadConsumerImpl implements DownloadConsumer {
 	@Override
 	@PostConstruct
 	public void download() {
-		new Thread(() -> getTask(isRunning)).start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				getTask(isRunning);
+			}
+		}).start();
 	}
 
 	protected void getTask(boolean isRunning) {
