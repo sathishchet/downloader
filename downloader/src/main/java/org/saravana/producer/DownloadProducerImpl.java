@@ -13,7 +13,15 @@ public class DownloadProducerImpl implements DownloadProducer {
 
 	@Override
 	public boolean submit(Download download) {
-		return queue.put(download);
+		return getQueue().put(download);
+	}
+
+	public DownloadQueue getQueue() {
+		return queue;
+	}
+
+	public void setQueue(DownloadQueue queue) {
+		this.queue = queue;
 	}
 
 }

@@ -32,26 +32,36 @@ public class DownloadServiceImpl implements DownloadService {
 		if ("End".equals(spec)) {
 			download.setStatus(Status.TERMINATE);
 		} else {
-			URI uri = null;
 			try {
-				uri = new URI(spec);
-			} catch (URISyntaxException e) {
-				download.setMessage(e.getMessage());
-				download.setStatus(Status.REJECTED);
-				LOG.error("Exception while getting parsing " + e);
-			}
-			String scheme = uri.getScheme();
-			try {
-				URLStreamHandler handler = handlerFactory.getHandler(scheme);
+				URI uri = new URI(spec);
+				String scheme = uri.getScheme();
+				URLStreamHandler handler = getHandlerFactory().getHandler(scheme);
 				URL url = new URL(null, spec, handler);
 				download.setUrl(url);
-			} catch (MalformedURLException | InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException e) {
+			} catch (MalformedURLException | InstantiationException | IllegalAccessException | ClassNotFoundException
+					| IllegalArgumentException | URISyntaxException e) {
 				download.setMessage(e.getMessage());
 				download.setStatus(Status.REJECTED);
-				LOG.error("Exception while getting handler " + e);
+				LOG.error("Exception while getting handler ", e);
 			}
 		}
-		return producer.submit(download);
+		return getProducer().submit(download);
+	}
+
+	public DownloadProducer getProducer() {
+		return producer;
+	}
+
+	public void setProducer(DownloadProducer producer) {
+		this.producer = producer;
+	}
+
+	public URLHandlerFactory getHandlerFactory() {
+		return handlerFactory;
+	}
+
+	public void setHandlerFactory(URLHandlerFactory handlerFactory) {
+		this.handlerFactory = handlerFactory;
 	}
 
 }

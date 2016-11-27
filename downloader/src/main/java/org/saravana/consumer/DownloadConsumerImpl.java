@@ -27,15 +27,16 @@ public class DownloadConsumerImpl implements DownloadConsumer {
 	@Autowired
 	private DownloadQueue queue;
 
-	private ExecutorService execService;
-
 	@Autowired
 	private DownloadMonitor downloadMonitor;
+
+	private ExecutorService execService;
 
 	@Override
 	@PostConstruct
 	public void init() {
-		execService = Executors.newFixedThreadPool(nThreads);
+		execService = Executors
+				.newFixedThreadPool(nThreads <= 0 ? Runtime.getRuntime().availableProcessors() : nThreads);
 	}
 
 	private volatile boolean isRunning;
@@ -43,27 +44,48 @@ public class DownloadConsumerImpl implements DownloadConsumer {
 	@Override
 	@PostConstruct
 	public void download() {
-		new Thread(() -> {
-			while (!isRunning) {
-				Download download = queue.take();
-				if (download.getStatus() == Status.TERMINATE) {
-					isRunning = !isRunning;
-					destroy();
-					return;
-				}
-				download.setPath(path);
-				this.downloadMonitor.add(download);
-				if (download.getStatus() != Status.REJECTED)
-					this.execService.submit(new DownloadTask(download));
-			}
-		}).start();
+		new Thread(() -> getTask(isRunning)).start();
+	}
 
+	protected void getTask(boolean isRunning) {
+		while (!isRunning) {
+			Download download = queue.take();
+			if (download.getStatus() == Status.TERMINATE) {
+				isRunning = !isRunning;
+				destroy();
+				return;
+			}
+			download.setPath(path);
+			this.downloadMonitor.add(download);
+			if (download.getStatus() != Status.REJECTED)
+				submitTask(download);
+		}
+	}
+
+	protected void submitTask(Download download) {
+		this.execService.submit(new DownloadTask(download));
 	}
 
 	@Override
 	@PreDestroy
 	public void destroy() {
 		execService.shutdown();
+	}
+
+	public DownloadQueue getQueue() {
+		return queue;
+	}
+
+	public void setQueue(DownloadQueue queue) {
+		this.queue = queue;
+	}
+
+	public DownloadMonitor getDownloadMonitor() {
+		return downloadMonitor;
+	}
+
+	public void setDownloadMonitor(DownloadMonitor downloadMonitor) {
+		this.downloadMonitor = downloadMonitor;
 	}
 
 }

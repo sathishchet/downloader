@@ -62,10 +62,29 @@ public class Downloader implements CommandLineRunner {
 
 	@Scheduled(initialDelay = 15000, fixedDelay = 10000)
 	public void stop() {
-		List<Status> notDone = Arrays.asList(Status.STARTED, Status.DOWNLOADING, Status.UNKNOWN);
+		List<Status> notDone = Arrays.asList(Status.DOWNLOADING, Status.UNKNOWN);
 		long unProc = monitor.getAll().stream().map(Download::getStatus).filter(notDone::contains).count();
 		if (monitor.getAll().size() == total && unProc == 0) {
 			SpringApplication.exit(context);
 		}
 	}
+
+	/**
+	 * unit-testing
+	 * 
+	 * @param downloadService
+	 */
+	protected void setDownloadService(DownloadService downloadService) {
+		this.downloadService = downloadService;
+	}
+
+	/**
+	 * unit-testing
+	 * 
+	 * @param monitor
+	 */
+	protected void setMonitor(DownloadMonitor monitor) {
+		this.monitor = monitor;
+	}
+
 }

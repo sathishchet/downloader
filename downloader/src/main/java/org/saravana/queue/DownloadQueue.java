@@ -31,7 +31,7 @@ public class DownloadQueue {
 			queue.put(download);
 			status = true;
 		} catch (InterruptedException e) {
-			LOG.error("Exception while put in queue " + e);
+			LOG.error("Exception while put in queue ", e);
 		}
 		return status;
 	}
@@ -40,7 +40,7 @@ public class DownloadQueue {
 		try {
 			return queue.take();
 		} catch (InterruptedException e) {
-			LOG.error("Exception while take from queue " + e);
+			LOG.error("Exception while take from queue ", e);
 		}
 		return null;
 	}
